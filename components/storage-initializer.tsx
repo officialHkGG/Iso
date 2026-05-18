@@ -5,7 +5,6 @@ import { initializeStorage } from "@/lib/local-storage"
 
 export function StorageInitializer() {
   useEffect(() => {
-    // Initialize storage on mount
     initializeStorage()
   }, [])
 

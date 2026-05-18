@@ -95,7 +95,7 @@ The application automatically creates a default admin user and prompts you to se
 
 ## Supabase Setup
 
-The app is wired for Supabase through a single `qms_records` table. To enable it:
+The app uses Supabase Auth for customer login and a single `qms_records` table for customer data. To enable it:
 
 1. Create a Supabase project.
 2. Open the Supabase SQL editor and run `supabase/schema.sql`.
@@ -109,7 +109,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 5. Restart the dev server.
 
-When those environment variables are missing, the app still works with browser storage for quick local testing.
+When those environment variables are missing, the login page will show a configuration error. For quick local testing without Supabase, remove the dashboard auth gate in development only.
+
+### Customer Login Setup
+
+1. In Supabase, open **Authentication > Users**.
+2. Create or invite one user per customer.
+3. Send the customer's email and temporary password/invite link to the customer.
+4. Keep public sign-up disabled if you only want accounts you create to access the app.
+5. Run `supabase/schema.sql` after this update so row-level security can isolate each customer's records.
+
+Each logged-in customer can only read and write rows where `qms_records.user_id = auth.uid()`. This means every login gets its own QMS workspace.
 
 The database stores:
 
@@ -121,7 +131,7 @@ The database stores:
 - User profiles
 - ISO standard preferences
 
-**Note**: The included policies are permissive so the prototype works immediately with the anon key. Tighten row-level security before using this with private production data.
+**Note**: Old prototype rows created before login support may not have `user_id`, so they are hidden by the new row-level security policies.
 
 ## Build for one.com
 

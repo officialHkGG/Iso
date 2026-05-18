@@ -7,6 +7,7 @@ import { Search, FileText } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { documentStorage } from "@/lib/local-storage"
+import { isSupabaseEnabled } from "@/lib/supabase-records"
 import { DocumentDialog } from "@/components/document-dialog"
 import { DocumentActions } from "@/components/document-actions"
 import { Button } from "@/components/ui/button"
@@ -64,6 +65,12 @@ export default function DocumentsPage() {
       setFilteredDocs(docs)
     } catch (error) {
       console.error("Error loading documents:", error)
+      if (isSupabaseEnabled()) {
+        setDocuments([])
+        setFilteredDocs([])
+        return
+      }
+
       const docs = documentStorage.getAllSync()
       setDocuments(docs)
       setFilteredDocs(docs)

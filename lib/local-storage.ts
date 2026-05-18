@@ -127,12 +127,46 @@ async function deleteRows(key: string, collection: string): Promise<boolean> {
 export function getCurrentUser() {
   if (typeof window === "undefined") return null
   const user = localStorage.getItem(STORAGE_KEYS.CURRENT_USER)
-  return user ? JSON.parse(user) : null
+  try {
+    return user ? JSON.parse(user) : null
+  } catch {
+    return null
+  }
 }
 
 export function setCurrentUser(user: any) {
   if (typeof window === "undefined") return
   localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user))
+}
+
+export function clearCurrentUser() {
+  if (typeof window === "undefined") return
+  localStorage.removeItem(STORAGE_KEYS.CURRENT_USER)
+}
+
+export async function syncCurrentUserProfile(user: any) {
+  const profile = {
+    ...user,
+    updated_at: new Date().toISOString(),
+  }
+
+  setCurrentUser(profile)
+
+  if (isSupabaseEnabled()) {
+    return upsertRecord(COLLECTIONS.PROFILES, profile)
+  }
+
+  const profiles = getFromStorage<any>(STORAGE_KEYS.PROFILES)
+  const index = profiles.findIndex((item) => item.id === profile.id)
+
+  if (index === -1) {
+    profiles.push({ ...profile, created_at: new Date().toISOString() })
+  } else {
+    profiles[index] = { ...profiles[index], ...profile }
+  }
+
+  setToStorage(STORAGE_KEYS.PROFILES, profiles)
+  return profile
 }
 
 export const ISO_SYSTEMS = [
@@ -169,6 +203,7 @@ export function setISOSystem(systemValue: string) {
 
 export function initializeStorage() {
   if (typeof window === "undefined") return
+  if (isSupabaseEnabled()) return
 
   const currentUser = getCurrentUser()
   if (!currentUser) {
@@ -189,9 +224,6 @@ export function initializeStorage() {
       setToStorage(STORAGE_KEYS.PROFILES, [defaultUser])
     }
 
-    if (isSupabaseEnabled()) {
-      void upsertRecord(COLLECTIONS.PROFILES, defaultUser)
-    }
   }
 }
 

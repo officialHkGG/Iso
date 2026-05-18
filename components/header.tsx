@@ -11,7 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { getCurrentUser } from "@/lib/local-storage"
+import { clearCurrentUser, getCurrentUser } from "@/lib/local-storage"
+import { getSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase-client"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { NotificationCenter } from "./notification-center"
@@ -30,11 +31,14 @@ export function Header() {
   }, [])
 
   const handleSignOut = async () => {
-    if (typeof window !== "undefined") {
-      localStorage.clear()
+    try {
+      if (isSupabaseConfigured()) {
+        await getSupabaseBrowserClient().auth.signOut()
+      }
+    } finally {
+      clearCurrentUser()
+      router.replace("/login/")
     }
-    router.push("/login")
-    router.refresh()
   }
 
   return (
