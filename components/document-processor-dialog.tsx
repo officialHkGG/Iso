@@ -65,8 +65,8 @@ export function DocumentProcessorDialog({ onSuccess }: DocumentProcessorDialogPr
     setProcessing(true)
 
     try {
-      console.log("[v0] Starting document processing...")
-      console.log("[v0] Company settings:", settings)
+      console.log("Starting document processing...")
+      console.log("Company settings:", settings)
 
       // Read the file
       const arrayBuffer = await file.arrayBuffer()
@@ -93,12 +93,12 @@ export function DocumentProcessorDialog({ onSuccess }: DocumentProcessorDialogPr
         documentTitle: documentTitle || file.name.replace(".docx", ""),
       }
 
-      console.log("[v0] Template data:", templateData)
+      console.log("Template data:", templateData)
       doc.setData(templateData)
 
       // Render the document
       doc.render()
-      console.log("[v0] Document rendered successfully")
+      console.log("Document rendered successfully")
 
       // Generate the processed document
       const output = doc.getZip().generate({
@@ -106,11 +106,11 @@ export function DocumentProcessorDialog({ onSuccess }: DocumentProcessorDialogPr
         mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       })
 
-      console.log("[v0] Generated blob size:", output.size)
+      console.log("Generated blob size:", output.size)
 
       // Convert to base64 for storage
       const base64 = await fileToBase64(new File([output], file.name))
-      console.log("[v0] Converted to base64, length:", base64.length)
+      console.log("Converted to base64, length:", base64.length)
 
       // Save to document storage
       const newDoc = await documentStorage.create({
@@ -125,7 +125,7 @@ export function DocumentProcessorDialog({ onSuccess }: DocumentProcessorDialogPr
         review_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
       })
 
-      console.log("[v0] Document saved:", newDoc.id)
+      console.log("Document saved:", newDoc.id)
       toast.success("Document processed and saved successfully!")
       setOpen(false)
       setFile(null)
@@ -133,8 +133,8 @@ export function DocumentProcessorDialog({ onSuccess }: DocumentProcessorDialogPr
       setDocumentTitle("")
       onSuccess?.()
     } catch (error: any) {
-      console.error("[v0] Document processing error:", error)
-      console.error("[v0] Error details:", error.message, error.stack)
+      console.error("Document processing error:", error)
+      console.error("Error details:", error.message, error.stack)
       toast.error(`Failed to process document: ${error.message || "Unknown error"}`)
     } finally {
       setProcessing(false)

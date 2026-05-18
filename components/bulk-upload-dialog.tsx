@@ -88,7 +88,7 @@ export function BulkUploadDialog({ onSuccess }: BulkUploadDialogProps) {
       setSelectedFiles([])
       onSuccess?.()
     } catch (error) {
-      console.error("[v0] Bulk upload error:", error)
+      console.error("Bulk upload error:", error)
       toast({
         title: "Error",
         description: "Failed to upload documents",

@@ -42,7 +42,7 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
     const selectedFile = e.target.files?.[0]
     if (!selectedFile) return
 
-    console.log("[v0] File selected:", selectedFile.name, selectedFile.type, selectedFile.size)
+    console.log("File selected:", selectedFile.name, selectedFile.type, selectedFile.size)
 
     if (!selectedFile.name.endsWith(".docx")) {
       toast.error("Please upload a .docx file")
@@ -75,18 +75,18 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
     setProgress(10)
 
     try {
-      console.log("[v0] Starting document processing...")
-      console.log("[v0] File:", file.name, file.size, file.type)
-      console.log("[v0] Company settings:", settings)
+      console.log("Starting document processing...")
+      console.log("File:", file.name, file.size, file.type)
+      console.log("Company settings:", settings)
 
       // Read the file
       setProgress(20)
       const arrayBuffer = await file.arrayBuffer()
-      console.log("[v0] File read, buffer size:", arrayBuffer.byteLength)
+      console.log("File read, buffer size:", arrayBuffer.byteLength)
 
       setProgress(30)
       const zip = new PizZip(arrayBuffer)
-      console.log("[v0] ZIP loaded")
+      console.log("ZIP loaded")
 
       // Create docxtemplater instance
       setProgress(40)
@@ -98,7 +98,7 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
           end: "}}",
         },
       })
-      console.log("[v0] Docxtemplater instance created")
+      console.log("Docxtemplater instance created")
 
       // Set the template variables
       setProgress(50)
@@ -124,13 +124,13 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
         DocumentTitle: documentTitle || file.name.replace(".docx", ""),
       }
 
-      console.log("[v0] Template data:", templateData)
+      console.log("Template data:", templateData)
       doc.setData(templateData)
 
       // Render the document
       setProgress(60)
       doc.render()
-      console.log("[v0] Document rendered successfully")
+      console.log("Document rendered successfully")
 
       // Generate the processed document
       setProgress(70)
@@ -139,15 +139,15 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
         mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       })
 
-      console.log("[v0] Generated blob size:", output.size)
+      console.log("Generated blob size:", output.size)
 
       // Convert to base64 for storage
       setProgress(80)
       const base64 = await fileToBase64(new File([output], file.name))
-      console.log("[v0] Converted to base64, length:", base64.length)
+      console.log("Converted to base64, length:", base64.length)
 
       if (base64.length > 5000000) {
-        console.log("[v0] Large file detected, will use IndexedDB storage")
+        console.log("Large file detected, will use IndexedDB storage")
       }
 
       // Save to document storage
@@ -165,7 +165,7 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
       })
 
       setProgress(100)
-      console.log("[v0] Document saved:", newDoc.id)
+      console.log("Document saved:", newDoc.id)
       toast.success("Document processed and saved successfully!")
 
       // Reset form
@@ -175,16 +175,16 @@ export function TemplateProcessorPanel({ onSuccess }: TemplateProcessorPanelProp
       setProgress(0)
       onSuccess?.()
     } catch (error: any) {
-      console.error("[v0] Document processing error:", error)
-      console.error("[v0] Error details:", error.message)
-      console.error("[v0] Error stack:", error.stack)
+      console.error("Document processing error:", error)
+      console.error("Error details:", error.message)
+      console.error("Error stack:", error.stack)
 
       let errorMessage = "Unknown error occurred"
       if (error.message) {
         errorMessage = error.message
       }
       if (error.properties && error.properties.errors) {
-        console.error("[v0] Template errors:", error.properties.errors)
+        console.error("Template errors:", error.properties.errors)
         errorMessage = "Template has errors. Check that all placeholders use {{ }} syntax."
       }
 

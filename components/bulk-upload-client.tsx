@@ -130,7 +130,7 @@ export function BulkUploadClient({ userId }: { userId: string }) {
         setFiles((prev) => prev.map((f, idx) => (idx === i ? { ...f, status: "success", progress: 100 } : f)))
         uploadedCount += 1
       } catch (error) {
-        console.error("[v0] Upload error:", error)
+        console.error("Upload error:", error)
         setFiles((prev) =>
           prev.map((f, idx) =>
             idx === i ? { ...f, status: "error", error: error instanceof Error ? error.message : "Upload failed" } : f,

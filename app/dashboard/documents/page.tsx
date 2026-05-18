@@ -63,7 +63,7 @@ export default function DocumentsPage() {
       setDocuments(docs)
       setFilteredDocs(docs)
     } catch (error) {
-      console.error("[v0] Error loading documents:", error)
+      console.error("Error loading documents:", error)
       const docs = documentStorage.getAllSync()
       setDocuments(docs)
       setFilteredDocs(docs)

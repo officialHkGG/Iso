@@ -60,7 +60,7 @@ export function DocumentActions({ document, onUpdate }: DocumentActionsProps) {
       setShowDeleteDialog(false)
       onUpdate?.()
     } catch (error) {
-      console.error("[v0] Delete error:", error)
+      console.error("Delete error:", error)
       toast({
         title: "Error",
         description: "Failed to delete document",
@@ -97,7 +97,7 @@ export function DocumentActions({ document, onUpdate }: DocumentActionsProps) {
       })
       onUpdate?.()
     } catch (error) {
-      console.error("[v0] Approve error:", error)
+      console.error("Approve error:", error)
       toast({
         title: "Error",
         description: "Failed to approve document",

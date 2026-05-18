@@ -38,7 +38,7 @@ export function DocumentViewerDialog({ open, onOpenChange, document }: DocumentV
           setFileData(document.file_url)
         }
       } catch (error) {
-        console.error("[v0] Error loading file:", error)
+        console.error("Error loading file:", error)
         toast.error("Failed to load file")
       } finally {
         setLoading(false)
@@ -68,7 +68,7 @@ export function DocumentViewerDialog({ open, onOpenChange, document }: DocumentV
 
       toast.success(`Downloaded ${fileName}`)
     } catch (error) {
-      console.error("[v0] Download error:", error)
+      console.error("Download error:", error)
       toast.error("Failed to download file")
     }
   }
@@ -238,7 +238,7 @@ export function DocumentViewerDialog({ open, onOpenChange, document }: DocumentV
         newWindow.document.close()
       }
     } catch (error) {
-      console.error("[v0] View error:", error)
+      console.error("View error:", error)
       toast.error("Failed to open file viewer")
     }
   }

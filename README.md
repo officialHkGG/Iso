@@ -1,6 +1,6 @@
 # Lisora - Quality Management System
 
-A comprehensive Quality Management System (QMS) platform built with Next.js 15, designed to support multiple ISO standards including ISO 9001, ISO 13485, ISO 14001, ISO 27001, and more.
+A comprehensive Quality Management System (QMS) platform built with Next.js 15. The app is configured for static hosting and can be uploaded to a standard one.com web space after building.
 
 ## Features
 
@@ -14,7 +14,7 @@ A comprehensive Quality Management System (QMS) platform built with Next.js 15, 
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 15 (App Router, static export)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
 - **UI Components**: Radix UI + shadcn/ui
@@ -123,12 +123,28 @@ The database stores:
 
 **Note**: The included policies are permissive so the prototype works immediately with the anon key. Tighten row-level security before using this with private production data.
 
-## Building for Production
+## Build for one.com
 
 ```bash
 npm run build
-npm start
 ```
+
+The build creates an `out` folder. Upload the contents of `out` to the public one.com web folder, usually `httpd.www`, using one.com File Manager or SFTP.
+
+Important: this is a static build. Supabase values from `.env.local` are baked into the browser app at build time, so rebuild and re-upload after changing `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+## Deploy to one.com
+
+1. Make sure `.env.local` contains your Supabase URL and anon key.
+2. Run the Supabase SQL in `supabase/schema.sql` in the Supabase SQL editor.
+3. Run `npm run build`.
+4. Open one.com Control Panel.
+5. Go to Hosting settings and open File Manager, or enable SSH/SFTP access and connect with an SFTP client.
+6. Open the public folder named `httpd.www`.
+7. Upload everything inside the local `out` folder into `httpd.www`.
+8. Visit your domain and test the dashboard.
+
+If `stato.se` is already hosted at one.com, the domain normally points to that web space automatically. If DNS is managed elsewhere, point the domain to one.com from the DNS or nameserver settings in the one.com control panel.
 
 ## Development
 
@@ -143,8 +159,8 @@ The application is modular and easy to extend:
 ### Available Scripts
 
 - `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
+- `npm run build` - Build static files into `out`
+- `npm run build:one` - Same as build, named for one.com upload
 - `npm run lint` - Run ESLint
 
 ## VS Code Setup
