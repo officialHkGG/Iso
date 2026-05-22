@@ -156,7 +156,7 @@
 
   /* Force proper stacking context for dialogs */
   [data-radix-popper-content-wrapper] {
-    z-index: 50 !important;
+    z-index: 200 !important;
   }
 
   [role="dialog"],
