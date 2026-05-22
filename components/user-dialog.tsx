@@ -48,9 +48,21 @@ export function UserDialog({ user, trigger, onOpenChange, onSuccess }: UserDialo
     setLoading(true)
 
     const formData = new FormData(event.currentTarget)
+    const email = ((formData.get("email") as string) || "").trim()
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({
+        title: "Invalid email",
+        description: "Enter a full email address, for example customer@example.com.",
+        variant: "destructive",
+      })
+      setLoading(false)
+      return
+    }
+
     const userData = {
       full_name: formData.get("fullName") as string,
-      email: formData.get("email") as string,
+      email,
       role: formData.get("role") as string,
       department: (formData.get("department") as string) || null,
       iso_system: formData.get("isoSystem") as string,
@@ -84,7 +96,7 @@ export function UserDialog({ user, trigger, onOpenChange, onSuccess }: UserDialo
         )}
       </DialogTrigger>
       <DialogContent className="max-w-xl">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <DialogHeader>
             <DialogTitle>{isEdit ? "Edit User" : "Add User"}</DialogTitle>
             <DialogDescription>Manage QMS access, role, and department assignment.</DialogDescription>
